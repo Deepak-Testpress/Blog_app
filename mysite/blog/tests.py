@@ -1,5 +1,6 @@
 from django.test import TestCase
-from blog.models import Post
+from django.db import models
+from blog.models import Post, PublishedManager
 from django.contrib.auth.models import User
 
 
@@ -22,10 +23,6 @@ class PostModelTest(TestCase):
             author=testuser,
             status="published",
         )
-
-    def test_object_name_is_title(self):
-        post = Post.objects.get(id=1)
-        self.assertEqual("Sample Test", str(post))
 
     def test_published_manager(self):
         published_queryset = Post.published.get_queryset()
