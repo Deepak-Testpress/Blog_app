@@ -1,6 +1,5 @@
 from django.test import TestCase
-from django.db import models
-from blog.models import Post, PublishedManager
+from blog.models import Post
 from django.contrib.auth.models import User
 
 
@@ -27,7 +26,7 @@ class PostModelTest(TestCase):
             title="Sample Test 2",
             body="I am Testing 2",
             author=testuser,
-            status=Post.STATUS_CHOICES[1][0],
+            status="published",
         )
 
 
