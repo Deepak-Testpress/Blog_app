@@ -7,9 +7,7 @@ class PostModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
 
-        testuser = User.objects.create_user(
-            username="deepak", password="12345"
-        )
+        testuser = User.objects.create_user(username="deepak", password="root")
         Post.objects.create(
             title="Sample Test",
             body="I am Testing",
