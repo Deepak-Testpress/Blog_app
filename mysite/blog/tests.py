@@ -1,6 +1,5 @@
 from django.test import TestCase
-from django.db import models
-from blog.models import Post, PublishedManager
+from blog.models import Post
 from django.contrib.auth.models import User
 
 
