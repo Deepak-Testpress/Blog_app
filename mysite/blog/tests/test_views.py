@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from blog.forms import EmailPostForm
 from blog.models import Post
 from django.contrib.auth.models import User
 from django.urls import reverse

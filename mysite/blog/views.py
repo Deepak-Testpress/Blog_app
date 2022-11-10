@@ -39,7 +39,10 @@ def post_share(request, post_id):
                 f"{cd['name']}'s comments: {cd['comments']}"
             )
             send_mail(
-                subject, message, "harinath01102000@gmail.com", [cd["to"]]
+                subject=subject,
+                message=message,
+                from_email="deepak@testpress.in",
+                recipient_list=[cd["to"]],
             )
             sent = True
 
