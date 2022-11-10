@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from blog.forms import EmailPostForm
 from blog.models import Post
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -94,3 +95,10 @@ class PostViewsTest(TestCase):
         unsuccessful_response = self.client.get(incorrect_post_detail_url)
 
         self.assertEqual(404, unsuccessful_response.status_code)
+
+    def test_post_share_template_used(self):
+
+        post_share_url = reverse("blog:post_share", args=[2])
+        response = self.client.get(post_share_url)
+
+        self.assertTemplateUsed(response, "blog/post/share.html")
