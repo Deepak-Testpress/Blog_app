@@ -1,8 +1,7 @@
 from django.test import TestCase, Client
-from blog.forms import EmailPostForm
-from blog.models import Post
-from django.contrib.auth.models import User
+from blog.models import Post, User
 from django.urls import reverse
+from blog.tests.test_ModelMixinTestCase import ModelMixinTestCase
 
 
 class TestPostView(TestCase):
@@ -26,8 +25,8 @@ class TestPostView(TestCase):
         )
 
     def test_post_list_template_used(self):
-        post_list_url = reverse("blog:post_list")
-        response = self.client.get(post_list_url)
+        self.post_list_url = reverse("blog:post_list")
+        response = self.client.get(self.post_list_url)
 
         self.assertTemplateUsed(response, "blog/post/list.html")
 
