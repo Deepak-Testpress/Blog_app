@@ -1,6 +1,6 @@
 from django.test import TestCase
-from blog.models import Post
-from django.contrib.auth.models import User
+from blog.models import Post, User
+from blog.tests.test_ModelMixinTestCase import ModelMixinTestCase
 
 
 class PostModelTest(TestCase):
