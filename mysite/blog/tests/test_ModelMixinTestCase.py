@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from blog.models import Post
+from blog.models import Post, Comment
 from django.urls import reverse
 from django.contrib.auth.models import User
 
@@ -41,3 +41,10 @@ class ModelMixinTestCase(TestCase):
             ],
         )
         self.post_share_url = reverse("blog:post_share", args=[2])
+
+        self.test_post_comment = Comment.objects.create(
+            post=self.test_published_post,
+            name="First comment",
+            email="deeepak@testpress.in",
+            body="this is comment body",
+        )
