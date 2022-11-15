@@ -5,48 +5,29 @@ from django.contrib.auth.models import User
 
 class PostModelTest(TestCase):
     @classmethod
-    def setUpTestData(cls):
+    def setUpTestData(self):
 
         testuser = User.objects.create_user(username="deepak", password="root")
-        Post.objects.create(
-            title="Sample Test",
-            body="I am Testing",
+
+        self.draft_post = Post.objects.create(
+            title="Test that's status=draft by default",
+            body="its a draft post with id=1",
             author=testuser,
-            status=Post.STATUS_CHOICES[0][0],
         )
-        Post.objects.create(
+        self.published_post = Post.objects.create(
             title="Sample Test 2",
-            body="I am Testing 2",
+            body="its a published post with id=2",
             author=testuser,
-            status=Post.STATUS_CHOICES[1][0],
+            status="published",
         )
 
-    def test_post_getters(self):
-        post = Post.objects.get(id=1)
-        testuser = User.objects.get(id=1)
-        self.assertEqual(str(post.title), "Sample Test")
-        self.assertEqual(str(post.body), "I am Testing")
-        self.assertEqual(str(post.status), "draft")
-        self.assertEqual(post.author, testuser)
+    def test_post_str_method_returns_post_title(self):
 
-    def test_post_field_structure(self):
-        post = Post.objects.get(id=1)
-        title_max_length = post._meta.get_field("title").max_length
-        self.assertEqual(title_max_length, 250)
-        slug_max_length = post._meta.get_field("slug").max_length
-        self.assertEqual(slug_max_length, 250)
-        status_max_length = post._meta.get_field("status").max_length
-        self.assertEqual(status_max_length, 10)
+        self.assertEqual(str(self.draft_post), self.draft_post.title)
 
-    def test_object_name_is_title(self):
-        post = Post.objects.get(id=1)
-        self.assertEqual(str(post), "Sample Test")
-
-    def test_published_manager(self):
-        published_queryset = Post.published.get_queryset()
-        objects_queryset_with_status_published = Post.objects.filter(
-            status="published"
-        )
+    def test_published_manager_returns_all_published_posts(self):
+        published_manager_result = Post.published.all()
+        posts_with_status_published = Post.objects.filter(status="published")
         self.assertQuerysetEqual(
-            published_queryset, objects_queryset_with_status_published
+            published_manager_result, posts_with_status_published
         )
