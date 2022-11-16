@@ -4,26 +4,7 @@ from django.urls import reverse
 from blog.tests.test_ModelMixinTestCase import ModelMixinTestCase
 
 
-class TestPostView(TestCase):
-    def setUp(self):
-        self.client = Client()
-
-        self.user = User.objects.create_user(
-            username="deepak", password="root"
-        )
-        self.unpublished_post = Post.objects.create(
-            title="Test post that's status=draft by default",
-            author=self.user,
-            body="This post is created by testuser author",
-        )
-        self.published_post = Post.objects.create(
-            title="Test post that's status=published",
-            author=self.user,
-            body="This post is created by testuser author",
-            slug="post-created-testuser-author",
-            status="published",
-        )
-
+class TestPostView(ModelMixinTestCase, TestCase):
     def test_post_list_template_used(self):
         self.post_list_url = reverse("blog:post_list")
         response = self.client.get(self.post_list_url)
@@ -58,3 +39,8 @@ class TestPostView(TestCase):
         response = self.client.get(post_detail_url)
 
         self.assertEqual(404, response.status_code)
+
+    def test_post_share_template_used(self):
+        response = self.client.get(self.post_share_url)
+
+        self.assertTemplateUsed(response, "blog/post/share.html")
