@@ -3,6 +3,7 @@ from django.views.generic import ListView
 from .models import Post
 from .forms import EmailPostForm
 from django.core.mail import send_mail
+from django.contrib import messages
 
 
 class PostListView(ListView):
@@ -26,31 +27,36 @@ def post_detail(request, year, month, day, post):
 
 def post_share(request, post_id):
     post = get_object_or_404(Post, id=post_id, status="published")
-    sent = False
 
     if request.method == "POST":
         form = EmailPostForm(request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
             post_url = request.build_absolute_uri(post.get_absolute_url())
-            subject = f"{cd['name']} recommends you read {post.title}"
+            subject = f"{form.cleaned_data['from_name']} recommends you read {post.title}"
             message = (
                 f"Read {post.title} at {post_url}\n\n"
-                f"{cd['name']}'s comments: {cd['comments']}"
+                f"{form.cleaned_data['from_name']}'s comment: {form.cleaned_data['share_message']}"
             )
+
             send_mail(
                 subject=subject,
                 message=message,
-                from_email="deepak@testpress.in",
-                recipient_list=[cd["to"]],
+                from_email=form.cleaned_data["from_email"],
+                recipient_list=[form.cleaned_data["to_email"]],
             )
-            sent = True
+            to_mail = form.cleaned_data["to_email"]
+            messages.success(
+                request, f"{post.title} was successfully sent to {to_mail}"
+            )
+            return render(
+                request, "blog/post/share.html", {"post": post, "form": form}
+            )
+        messages.error(request, "Error sending mail")
+        return render(
+            request, "blog/post/share.html", {"post": post, "form": form}
+        )
 
-    else:
-        form = EmailPostForm()
-
+    form = EmailPostForm()
     return render(
-        request,
-        "blog/post/share.html",
-        {"post": post, "form": form, "sent": sent},
+        request, "blog/post/share.html", {"post": post, "form": form}
     )

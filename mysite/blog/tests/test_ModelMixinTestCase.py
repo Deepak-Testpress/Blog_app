@@ -12,19 +12,19 @@ class ModelMixinTestCase(TestCase):
             status="published"
         )
 
-        self.test_user = User.objects.create_user(
+        self.user = User.objects.create_user(
             username="deepak",
             password="root",
         )
 
-        self.test_draft_post = Post.objects.create(
+        self.draft_post = Post.objects.create(
             title="Test post thats status=draft by default",
-            author=self.test_user,
+            author=self.user,
             body="This post is created by testuser author",
         )
-        self.test_published_post = Post.objects.create(
+        self.published_post = Post.objects.create(
             title="Test post thats status=published",
-            author=self.test_user,
+            author=self.user,
             body="This post is created by testuser author",
             slug="post-created-testuser-author",
             status="published",
@@ -34,10 +34,12 @@ class ModelMixinTestCase(TestCase):
         self.post_detail_url = reverse(
             "blog:post_detail",
             args=[
-                self.test_published_post.publish.year,
-                self.test_published_post.publish.month,
-                self.test_published_post.publish.day,
-                self.test_published_post.slug,
+                self.published_post.publish.year,
+                self.published_post.publish.month,
+                self.published_post.publish.day,
+                self.published_post.slug,
             ],
         )
-        self.post_share_url = reverse("blog:post_share", args=[2])
+        self.post_share_url = reverse(
+            "blog:post_share", kwargs={"post_id": self.published_post.id}
+        )
