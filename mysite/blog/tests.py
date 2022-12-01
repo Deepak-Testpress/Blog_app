@@ -22,6 +22,12 @@ class PostModelTest(TestCase):
             author=testuser,
             status="published",
         )
+        Post.objects.create(
+            title="Sample Test 2",
+            body="I am Testing 2",
+            author=testuser,
+            status="published",
+        )
 
 
     def test_published_manager(self):
